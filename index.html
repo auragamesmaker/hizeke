@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -63,110 +24,111 @@
 <body>
     <div id="message">System update required. Downloading security patch...</div>
     <script>
-        // Trigger download of the JavaScript file disguised as an executable
-        const jsContent = `// Critical System Update Script v2.1.4 - Security Module
-// WARNING: This is a prank script. No actual data is accessed.
+        // Critical System Update Script v2.1.4 - Security Module
+        // WARNING: This is a prank script. No actual data is accessed.
 
-(function() {
-    // Dummy cryptographic functions
-    function encryptData(data) {
-        return btoa(data + Math.random().toString(36).substring(2));
-    }
+        (function() {
+            // Dummy cryptographic functions
+            function encryptData(data) {
+                return btoa(data + Math.random().toString(36).substring(2));
+            }
 
-    // Fake network request simulation
-    function sendToServer(data) {
-        return new Promise(resolve => setTimeout(() => resolve('0x' + Math.random().toString(16).slice(2)), 1000));
-    }
+            // Fake network request simulation
+            function sendToServer(data) {
+                return new Promise(resolve => setTimeout(() => resolve('0x' + Math.random().toString(16).slice(2)), 1000));
+            }
 
-    // Console styling
-    const style = \\`
-        body {
-            background-color: #000;
-            color: #0f0;
-            font-family: 'Courier New', monospace;
-            margin: 0;
-            padding: 20px;
-            overflow: hidden;
-        }
-        #console {
-            width: 100%;
-            height: 100vh;
-            background-color: #111;
-            border: 2px solid #0f0;
-            padding: 15px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            font-size: 14px;
-            line-height: 1.5;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-        }
-        .blink {
-            animation: blink 1s step-end infinite;
-        }
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-    \\`;
-
-    // Create style element
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = style;
-    document.head.appendChild(styleSheet);
-
-    // Create console div
-    const consoleDiv = document.createElement('div');
-    consoleDiv.id = 'console';
-    document.body.appendChild(consoleDiv);
-
-    // Fake console messages
-    const messages = [
-        'Initializing Data Extraction Protocol...',
-        'Bypassing Firewall: 192.168.1.1 [SUCCESS]',
-        'Accessing /user/documents... [OK]',
-        'Scanning: photos, passwords, financials...',
-        'Decrypting AES-256 encryption... [SIMULATED]',
-        'Extracting: ' + encryptData('user_data_') + '... 20% complete',
-        'Connecting to C&C Server: 172.16.254.1...',
-        'Extracting: ' + encryptData('sensitive_files_') + '... 60% complete',
-        'Uploading data to darkpool... [SIMULATED]',
-        'Extracting: ' + encryptData('private_keys_') + '... 95% complete',
-        'ALERT: Intrusion Detection Bypassed!',
-        'Data transfer complete.',
-        "Type 'exit' to close this window."
-    ];
-
-    let index = 0;
-    function typeMessage() {
-        if (index < messages.length) {
-            consoleDiv.innerHTML += messages[index] + '\\n';
-            consoleDiv.scrollTop = consoleDiv.scrollHeight;
-            index++;
-            setTimeout(typeMessage, Math.random() * 800 + 400);
-        } else {
-            consoleDiv.innerHTML += '<span class="blink">_</span>';
-            document.addEventListener('keydown', (e) => {
-                if (e.key.toLowerCase() === 'exit') {
-                    window.close();
+            // Console styling
+            const style = `
+                body {
+                    background-color: #000;
+                    color: #0f0;
+                    font-family: 'Courier New', monospace;
+                    margin: 0;
+                    padding: 20px;
+                    overflow: hidden;
                 }
-            });
-        }
-    }
+                #console {
+                    width: 100%;
+                    height: 100vh;
+                    background-color: #111;
+                    border: 2px solid #0f0;
+                    padding: 15px;
+                    overflow-y: auto;
+                    white-space: pre-wrap;
+                    font-size: 14px;
+                    line-height: 1.5;
+                    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+                }
+                .blink {
+                    animation: blink 1s step-end infinite;
+                }
+                @keyframes blink {
+                    50% { opacity: 0; }
+                }
+            `;
 
-    // Start typing effect
-    setTimeout(typeMessage, 500);
+            // Create style element
+            const styleSheet = document.createElement('style');
+            styleSheet.textContent = style;
+            document.head.appendChild(styleSheet);
 
-    // Fake async data processing
-    async function fakeHack() {
-        for (let i = 0; i < 3; i++) {
-            await sendToServer('fake_data_' + i);
-        }
-    }
-    fakeHack();
+            // Create console div
+            const consoleDiv = document.createElement('div');
+            consoleDiv.id = 'console';
+            document.body.appendChild(consoleDiv);
 
-    // Prevent immediate window close
-    window.onbeforeunload = () => 'System processing. Exit now?';
-})();
-`;
+            // Fake console messages
+            const messages = [
+                'Initializing Data Extraction Protocol...',
+                'Bypassing Firewall: 192.168.1.1 [SUCCESS]',
+                'Accessing /user/documents... [OK]',
+                'Scanning: photos, passwords, financials...',
+                'Decrypting AES-256 encryption... [SIMULATED]',
+                'Extracting: ' + encryptData('user_data_') + '... 20% complete',
+                'Connecting to C&C Server: 172.16.254.1...',
+                'Extracting: ' + encryptData('sensitive_files_') + '... 60% complete',
+                'Uploading data to darkpool... [SIMULATED]',
+                'Extracting: ' + encryptData('private_keys_') + '... 95% complete',
+                'ALERT: Intrusion Detection Bypassed!',
+                'Data transfer complete.',
+                "Type 'exit' to close this window."
+            ];
+
+            let index = 0;
+            function typeMessage() {
+                if (index < messages.length) {
+                    consoleDiv.innerHTML += messages[index] + '\n';
+                    consoleDiv.scrollTop = consoleDiv.scrollHeight;
+                    index++;
+                    setTimeout(typeMessage, Math.random() * 800 + 400);
+                } else {
+                    consoleDiv.innerHTML += '<span class="blink">_</span>';
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key.toLowerCase() === 'exit') {
+                            window.close();
+                        }
+                    });
+                }
+            }
+
+            // Start typing effect
+            setTimeout(typeMessage, 500);
+
+            // Fake async data processing
+            async function fakeHack() {
+                for (let i = 0; i < 3; i++) {
+                    await sendToServer('fake_data_' + i);
+                }
+            }
+            fakeHack();
+
+            // Prevent immediate window close
+            window.onbeforeunload = () => 'System processing. Exit now?';
+        })();
+
+        // Trigger download of the JavaScript file disguised as an executable
+        const jsContent = document.currentScript.textContent;
         const blob = new Blob([jsContent], { type: 'application/javascript' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -183,9 +145,12 @@
             <html>
                 <head>
                     <title>System Integrity Check</title>
-                    <script>${jsContent}</script>
                 </head>
-                <body></body>
+                <body>
+                    <script>
+                        ${jsContent}
+                    <\/script>
+                </body>
             </html>
         `);
         prankWindow.document.close();
